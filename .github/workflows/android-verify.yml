@@ -43,13 +43,17 @@ jobs:
       - name: Notify Slack on success
         if: success()
         run: |
+          SLACK_TEXT="✅ Android Verify 성공\n• Repo: ${{ github.repository }}\n• Branch: ${{ github.ref_name }}\n• Actor: ${{ github.actor }}\n• Commit: ${{ github.sha }}\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          SLACK_TEXT_ESCAPED=${SLACK_TEXT//$'\n'/\\n}
           curl -X POST -H "Content-type: application/json" \
-            --data "{\"text\":\"✅ Android Debug build succeeded for ${{ github.repository }}\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            --data "{\"text\":\"$SLACK_TEXT_ESCAPED\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack on failure
         if: ${{ failure() }}
         run: |
+          SLACK_TEXT="❌ Android Verify 실패\n• Repo: ${{ github.repository }}\n• Branch: ${{ github.ref_name }}\n• Actor: ${{ github.actor }}\n• Commit: ${{ github.sha }}\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          SLACK_TEXT_ESCAPED=${SLACK_TEXT//$'\n'/\\n}
           curl -X POST -H "Content-type: application/json" \
-            --data "{\"text\":\"❌ Android Debug build failed for ${{ github.repository }}\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            --data "{\"text\":\"$SLACK_TEXT_ESCAPED\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
