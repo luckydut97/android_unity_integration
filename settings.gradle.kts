@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "unity_integration_Test"
 include(":app")
+include(":appium-tests")
  
